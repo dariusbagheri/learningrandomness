@@ -75,8 +75,8 @@ print(feat_d_arr.shape)
 
 x_scaler = StandardScaler()
 y_scaler = StandardScaler()
-x= x_scaler.fit_transform(feat_d_arr[0:3,0:1800].reshape(1800,3))
-y= y_scaler.fit_transform(feat_d_arr[3,0:1800].reshape(1800,1))
+x= feat_d_arr[0:3,0:1800].reshape(1800,3)
+y= feat_d_arr[3,0:1800].reshape(1800,1)
 
 
 Model = MLPRegressor(hidden_layer_sizes=(10,5,1 ), activation='relu', solver='adam', alpha=0.0001, batch_size='auto', learning_rate='adaptive', learning_rate_init=0.01, power_t=0.5, max_iter=1000, shuffle=True, 
@@ -86,8 +86,12 @@ Model = MLPRegressor(hidden_layer_sizes=(10,5,1 ), activation='relu', solver='ad
 Model.fit(x,y)
 
 
-pred = y_scaler.inverse_transform(Model.predict(feat_d_arr[0:3,1800:2000].reshape(200,3)))
-real = feat_d_arr[3,1800:2000].reshape(200,1)
+
+shaper = int((int(feat_d_arr[1,].shape[0])-1800))
+pred = Model.predict(feat_d_arr[0:3,1800:2000].reshape(shaper,3))
+real = feat_d_arr[3,1800:2000].reshape(shaper,1)
+                                  
+                                  
 diff= real - pred
 
 print("""The Neural Network Prediction is %s
